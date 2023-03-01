@@ -93,7 +93,11 @@ def createdb():
     );"""
 
     # Execute SQL  command using try/except clause
+<<<<<<< HEAD
         # try:
+=======
+    # try:
+>>>>>>> 940ee53 (Combined fetchincidents and extractincidents)
     cursor.execute(sql)
     conn.commit()
     # except:
