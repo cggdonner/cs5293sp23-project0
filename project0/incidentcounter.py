@@ -43,7 +43,7 @@ def extractincidents(incident_data):
             components = p[i].split(maxsplit=4) #maximum text split of 4
             incident = tuple(components) #store these fields in a tuple
             incidents.append(incident) #add each incident to the list of incidents
-            
+
         return incidents
 
     # Alternatively
@@ -61,9 +61,9 @@ def extractincidents(incident_data):
 # Create database
 import sqlite3
 
-def createdb(db="normanpd.db"):
+def createdb():
     # Connect to the database normanpd.db
-    conn = sqlite3.connect(db)
+    conn = sqlite3.connect("normanpd.db")
 
     # Cursor
     cursor = conn.cursor()
@@ -78,7 +78,7 @@ def createdb(db="normanpd.db"):
     );"""
 
     # Execute SQL  command using try/except clause
-    try: 
+    try:
         cursor.execute(sql)
         conn.commit()
     except:
@@ -88,35 +88,34 @@ def createdb(db="normanpd.db"):
     conn.close()
 
 # Insert Data
-def populatedb(incidents, db="normanpd.db"):
+def populatedb(db, incidents):
     # Takes rows created from extractincidents() function and puts them into normanpd.db
     # Connect to database again
-    conn = sqlite3.connect(db)
+    conn = sqlite3.connect("normanpd.db")
 
     #Cursor
     cursor = conn.cursor()
 
     #SQL command to insert the data into every row in incidents
     for row in incidents:
-        try: 
+        try:
             cursor.execute("""INSERT INTO incidents (incident_time, incident_number, incident_location, nature, incident_ori) VALUES (?, ?, ?, ?, ?)""", row)
             conn.commit()
         except:
             print(f"Error: {row} already exists in database.")
             conn.rollback()
-    
+    return incidents
     #Close connection
     conn.close()
 
-
 # Print Status
-def status(db="normanpd.db"):
+def status():
     # Prints out list of incidents as directed:
     # Type of incident (alphabetically) | Total number of incidents of that type
     # Example: Noise Complaint | 4
 
     # Connect to the database again
-    conn = sqlite3.connect(db)
+    conn = sqlite3.connect("normanpd.db")
 
     # Cursor
     cursor = conn.cursor()
