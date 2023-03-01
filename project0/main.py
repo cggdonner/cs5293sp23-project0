@@ -11,16 +11,16 @@ def main(url):
     incident_data = incidentcounter.fetchincidents(url)
 
     # Extract data
-    incidents = incidentcounter.extractincidents(incident_data)
+    #incidents = incidentcounter.extractincidents(incident_data)
 
     # Create new database
-    db = incidentcounter.createdb()
+    #db = incidentcounter.createdb()
 
     # Insert data
-    incidentcounter.populatedb(db, incidents)
+    #incidentcounter.populatedb(incident_data)
 
     # Print incident counts
-    incidentcounter.status()
+    #incidentcounter.status()
 
 
 if __name__ == '__main__':
