@@ -20,7 +20,7 @@ def main(url):
     incidentcounter.populatedb(db, incidents)
 
     # Print incident counts
-    incidentcounter.status(db)
+    incidentcounter.status()
 
 
 if __name__ == '__main__':
