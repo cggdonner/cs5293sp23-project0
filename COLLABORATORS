@@ -9,4 +9,9 @@ Code Speedy | https://www.codespeedy.com/read-pdf-file-in-python-line-by-line/#:
 Tutorials Point | https://www.tutorialspoint.com/python_data_access/python_mysql_insert_data.htm | Helped with sqlite syntax regarding insertion of data into SQL table
 W3 Schools | https://www.w3schools.com/sql/sql_groupby.asp | SQL group by command
 MySQL | https://dev.mysql.com/doc/connector-python/en/connector-python-api-mysqlcursor-fetchall.html#:~:text=fetchall()%20Method,-Syntax%3A%20rows%20%3D%20cursor&text=The%20method%20fetches%20all%20(or,it%20returns%20an%20empty%20list.&text=You%20must%20fetch%20all%20rows,statements%20using%20the%20same%20connection. | Documentation for fetchall method
-PyPi PyPDF2 3.0.1 | https://pypi.org/project/PyPDF2/ | Helped me with PyPDF2 documentation for extract incidents method   
+PyPi PyPDF2 3.0.1 | https://pypi.org/project/PyPDF2/ | Helped me with PyPDF2 documentation for extract incidents method
+Mehreen Habib | Mehreen.Habib-1@ou.edu | Suggested re.search method to scan url for mention of incidents
+Docs.Python.Org | https://docs.python.org/3/library/tempfile.html | tempfile documentation
+freeCodeCamp | https://www.freecodecamp.org/news/auto-format-your-python-code-with-black/ | black command documentation
+Towards Data Science | https://towardsdatascience.com/regular-expressions-clearly-explained-with-examples-822d76b037b4 | Regex examples
+Pytest Docs | https://docs.pytest.org/en/7.1.x/how-to/usage.html | pytest command documentation   

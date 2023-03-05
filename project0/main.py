@@ -1,35 +1,37 @@
-# Catherine Donner
-# Project 0
+# Authored by: cggdonner (Catherine Donner)
+# CS 5293 Project 0
 
-# Example main.py, this is not the final version. More or less steps needed
-import argparse #imports argument parser package
+# Packages
+import argparse  # Imports argument parser package
 
-import incidentcounter #imports functions from incidentcounter.py
+import incidentcounter  # Imports functions from incidentcounter.py
+
 
 def main(url):
-    # Download data
+    # Download and extract data given the url of the incident report (or arrest report, etc. even though this should only accept incident reports)
     incident_data = incidentcounter.fetchincidents(url)
 
-    # Extract data
-    #incidents = incidentcounter.extractincidents(incident_data)
+    # Create sqlite database table to store the extracted data
+    db = incidentcounter.createdb()
 
-    # Create new database
-    #db = incidentcounter.createdb()
+    # Insert data into the table given the incident data retrieved from fetchincidents()
+    incidentcounter.populatedb(incident_data)
 
-    # Insert data
-    #incidentcounter.populatedb(incident_data)
-
-    # Print incident counts
-    #incidentcounter.status()
+    # Print incident natures (alphabetically) with their counts
+    incidentcounter.status()
 
 
-if __name__ == '__main__':
+# Use argument parser package to add incidents argument which corresponds to the input url
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--incidents", type=str, required=True,
-                         help="Incident summary url.") #adds incident argument
+    parser.add_argument(
+        "--incidents", type=str, required=True, help="Incident summary url."
+    )
 
     args = parser.parse_args()
     if args.incidents:
-        main(args.incidents) #Parses parameters to pass through code
+        main(args.incidents)  # Parses parameters to pass through code
 
-#**TO RUN IN COMMAND LINE: pipenv run python project0/main.py --incidents <url>
+# **TO RUN IN COMMAND LINE: pipenv run python project0/main.py --incidents <url>
+
+# End of main.py

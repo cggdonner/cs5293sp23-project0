@@ -1,6 +1,7 @@
+# Authored by: cggdonner (Catherine Donner)
 # Functions to be used for main.py
 
-# Download data
+# Packages
 import urllib
 import urllib.request
 import tempfile
@@ -8,22 +9,24 @@ import PyPDF2  # be sure to pipenv install pypdf2
 from PyPDF2 import PdfReader
 import re
 
-
 # Read and extract incident data
 def fetchincidents(url):
+    # Condition to accept only urls containing incident summaries
     if re.search(r"incident", url):
         headers = {}
         headers[
             "User-Agent"
         ] = "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17"
-        # Download incident data
+        # Download and read incident data
         incident_data = urllib.request.urlopen(
             urllib.request.Request(url, headers=headers)
         ).read()
     else:
-        print(f"URL not valid because does not contain incidents")
+        print(
+            f"URL not valid because does not contain incidents"
+        )  # Otherwise reject any url that does not contain incidents
 
-    # Create temporary file
+    # Create temporary file to store incident data in
     fp = tempfile.TemporaryFile()
 
     # Write pdf data to temporary file
@@ -32,45 +35,52 @@ def fetchincidents(url):
     # Set cursor of file back to beginning
     fp.seek(0)
 
-    # Read PDF file
+    # Read pdf file using PyPDF2 PdfReader
     pdfReader = PdfReader(fp)
 
-    # Get number of pages
+    # Get number of pages in pdf
     pagecount = len(pdfReader.pages)
+    print("Number of pages: ", pagecount)  # Print statement to verify
 
-    # Store incident data in a list of tuples
+    # Store incident data in a list object
     incidents = []
 
     # Loop through number of pages and extract text
     for pagenum in range(0, pagecount):
         p = (
-            pdfReader.pages[pagenum].extract_text().split("  ")
-        )  # for loop to loop through each page and extract text
-        for i in range(len(p)):  # then nested for loop for each incident on each page
-            if not p[i].startswith("20"):
-                continue  # clarify what starts an incident
-            components = p[i].split(maxsplit=4)  # maximum text split of 4
-            incident = tuple(components)  # store these fields in a tuple
-            incidents.append(incident)  # add each incident to the list of incidents
-            print(f"Extracted incident data: {p[i]}")
-    fp.close()
+            pdfReader.pages[pagenum].extract_text().split("\n")
+        )  # Split each line based on the newline character
+
+        for i in range(
+            len(p)
+        ):  # Then include a nested for loop for each incident line on each page
+            # Condition to ignore unwanted headers
+            if (
+                "Daily Incident Summary (Public)" in p[i]
+                or "Date / Time Incident Number Location Nature Incident ORI" in p[i]
+                or "NORMAN POLICE DEPARTMENT" in p[i]
+            ):
+                continue
+
+            # Regex pattern to break each line (p[i]) into date_time, number, location, nature, and origin
+            # (\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2}) to recognize date and time using 1 or 2 digits for month and day, then 4 digits for year, then 1 or 2 digits for hour and 2 digits for minute
+            # \s(\d{4}-\d{8}) to recognize incident number using 4 digits followed by a hyphen, then followed by 8 digits
+            # Then split based on listed incident natures and then by incident origin
+            regex_pattern = r"(\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2})\s(\d{4}-\d{8})\s(.*?)(Traumatic Injury|Reckless Driving|Fireworks|Open Door\/Premises Check|Shots Heard|Mutual Aid|Loud Party|Contact a Subject|Public Assist|Check Area|Follow Up|Convulsion\/Seizure|Medical Call Pd Requested|Alarm|Hemorrhage\/Lacerations|Barking Dog|Harrassment \/ Threats Report|Unconscious\/Fainting|Sick Person|MVA With Injuries|MVA Non Injury|Debris in Roadway|Unknown Problem\/Man Down|Officer Needed Nature Unk|Parking Problem|Motorist Assist|Breathing Problems|Civil Standby|Heart Problems\/AICD|Vandalism|Animal Livestock|Diabetic Problems|Animal Bite|Found Item|Animal Dead|Falls|Cardiac Respritory Arrest|Runaway or Lost Child|Foot Patrol|Warrant Service|Traffic Stop|911 Call Nature Unknown|Welfare Check|Suspicious|Disturbance\/Domestic|Assist Officer|Information|Miscellaneous|Burglary Alarm|Robbery Alarm|Fire|911 Hang Up|Vehicle Lockout|Animal Call|Noise Disturbance|Citizen Assist|Transport|Domestic\/Familial|Narcotics|Hazardous Condition|Missing Person|Business Check|Lost Property|Threats|Property|Public Intoxication|Trespassing|Drunk Driver|Assault|Suicide|Assist Citizen|Hit & Run|Stolen Vehicle|Fight|Assault w/ Deadly Weapon|Indecent Exposure|Forgery\/Counterfeit|Sex Offense|Child Abuse\/Neglect|Embezzlement|Fraud|Forgery|Identity Theft|Auto Theft|Civil Matter|Criminal Mischief|Violation Of Court Order|Weapons Offense|Probation\/Parole|Arson|Kidnapping\/Abduction|Homicide|Sexual Assault|Burglary|Breaking & Entering|Larceny|Robbery|Transfer\/Interfacility|EMSSTAT|OK0140200|14005)"
+            components = re.split(
+                regex_pattern, p[i]
+            )  # Split each p[i] into the specified fields
+            # print(components) Print statement to verfify fields
+            incidents.append(
+                components
+            )  # Add each p[i] incident to the incidents list object
 
     return incidents
-    print(incidents)
-
-    # Alternatively
-    # for pagenum in range(0, pagecount):
-    # Get text from each page
-    #    p = pdfReader.getPage(pagenum).extractText().split("  ")
-
-    # Loop through each line in page and add each line to rows
-    # for i in range(len(p)):
-    #    print(p[i], end="\n")
-
-    # print("Page " + pagenum) # To reference page number
+    # print(incidents) Print statement to verify population of incidents
+    fp.close()  # Close the temporary file
 
 
-# Any lines that need to be fixed/ignored? Multiple lines of information?
+# Note: this regex pattern still creates an empty field '' before creating the date_time field. Also the location with multiple lines has not been accounted for, thereby some lines in incidents are still improperly formatted.
 
 # Create database
 import sqlite3
@@ -83,25 +93,31 @@ def createdb():
     # Cursor
     cursor = conn.cursor()
 
+    # SQL command to drop table so it can be recreated with the empty column
+    # This can also be a good measure to recreate the table containing different incident reports every time the main.py file is run
+    cursor.execute("""DROP TABLE incidents;""")
+
     # SQL command to create table
     sql = """CREATE TABLE IF NOT EXISTS incidents (
+        empty TEXT,
         incident_time TEXT,
         incident_number TEXT,
         incident_location TEXT,
         nature TEXT,
         incident_ori TEXT
-    );"""
+    );"""  # had to add empty field to accomodate the additional '' field before date_time
 
+<<<<<<< HEAD
     # Execute SQL  command using try/except clause
 <<<<<<< HEAD
         # try:
 =======
     # try:
 >>>>>>> 940ee53 (Combined fetchincidents and extractincidents)
+=======
+>>>>>>> 92c3452 (additional files and working main.py)
     cursor.execute(sql)
-    conn.commit()
-    # except:
-    #    conn.rollback() # Rollback in case of error
+    conn.commit()  # Commit changes to database
 
     # Close connection
     conn.close()
@@ -109,7 +125,12 @@ def createdb():
 
 # Insert Data
 def populatedb(incidents):
-    # Takes rows created from extractincidents() function and puts them into normanpd.db
+    # Takes rows created from fetchincidents() function and puts them into normanpd.db
+    # This condition adds any empty fields if the length of each incident[i] is less than 6; this makes it easier to insert the incidents data without having binding errors in the case that 1 or more incidents[i] happened to have less than 6 fields
+    for i in range(len(incidents)):
+        while len(incidents[i]) < 6:
+            incidents[i].append("")
+
     # Connect to database again
     conn = sqlite3.connect("normanpd.db")
 
@@ -117,17 +138,18 @@ def populatedb(incidents):
     cursor = conn.cursor()
 
     # SQL command to insert the data into every row in incidents
-    # for row in incidents:
-    # try:
     cursor.executemany(
-        """INSERT INTO incidents (incident_time, incident_number, incident_location, nature, incident_ori) VALUES (?, ?, ?, ?, ?)""",
+        """INSERT INTO incidents (empty, incident_time, incident_number, incident_location, nature, incident_ori) VALUES (?, ?, ?, ?, ?, ?)""",
         incidents,
     )
     conn.commit()
-    # except:
-    #    print(f"Error: {row} already exists in database.")
-    #    conn.rollback()
-    print(incidents)
+
+    # Print rows of incidents table using python function fetchall()
+    cursor.execute("""SELECT * FROM incidents""")
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)
+
     # Close connection
     conn.close()
 
@@ -144,18 +166,24 @@ def status():
     # Cursor
     cursor = conn.cursor()
 
-    # SQL query to select counts of each type of incident
-    sql_q = """SELECT nature, COUNT(*) FROM incidents GROUP BY nature"""
-    rows = cursor.fetchall()  # Fetchall retrieves the selected rows from the query
-    for row in rows:
+    # SQL query to select counts of each type of incident while also ordering by alphabetically
+    sql_q = (
+        """SELECT nature, COUNT(*) FROM incidents GROUP BY nature ORDER BY nature ASC"""
+    )
+    cursor.execute(sql_q)
+    incident_counts = (
+        cursor.fetchall()
+    )  # Fetchall retrieves the selected rows from the query
+
+    # Print each nature with its count
+    for row in incident_counts:
         nature, count = row
         print(f"{nature} | {count}")
 
-    #try:
-    cursor.execute(sql_q)
     conn.commit()
-    #except:
-    conn.rollback()
 
     # Close connection
     conn.close()
+
+
+# End of incidentcounter.py
