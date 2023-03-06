@@ -9,15 +9,23 @@ The objective of this project is to take an incident report from the Norman Poli
 3. Each incident must include the fields incident_time, incident_number, incident_location, nature, and incident_ori.
 4. For fields with multiple lines (i.e. location), accomodate to include that in the same incident.
 5. Load the extracted data from the incident report pdf into an sqlite database with the aforementioned fields.
-6. Return a status report in the format "Breathing Problems | 19".
+6. Return a status report in the format "Breathing Problems | 19" (example).
 
 ### How to install
-?
+You can install my Project 0 using the command:
+git clone https://github.com/cggdonner/cs5293sp23-project0.git
+You will have to sign in using the following credentials:
+username: cggdonner
+password: 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
+After signing in, use the command cd cs5293sp23-project0/ to access the repo.
+You are welcome to use tree . to view all directories and files in the repo.
 
 ### How to run
-In the terminal, the main.py file is executed using the following command:
+In the terminal, you can use the following command to run the main.py file:
 pipenv run python project0/main.py --incidents <url>
 where <url> = https://www.normanok.gov/sites/default/files/documents/2023-01/2023-01-01_daily_incident_summary.pdf or another related url
+To run test files in the directory tests, you can use the command:
+pipenv run python -m pytest
 
 ### Functions
 ###### incidentcounter.py (Please see for more detailed comments)

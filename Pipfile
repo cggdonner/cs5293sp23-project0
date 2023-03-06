@@ -8,6 +8,7 @@ requests = "*"
 black = "*"
 pypdf = "*"
 pypdf2 = "*"
+pytest = "*"
 
 [dev-packages]
 

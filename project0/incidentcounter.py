@@ -66,7 +66,7 @@ def fetchincidents(url):
             # (\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2}) to recognize date and time using 1 or 2 digits for month and day, then 4 digits for year, then 1 or 2 digits for hour and 2 digits for minute
             # \s(\d{4}-\d{8}) to recognize incident number using 4 digits followed by a hyphen, then followed by 8 digits
             # Then split based on listed incident natures and then by incident origin
-            regex_pattern = r"(\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2})\s(\d{4}-\d{8})\s(.*?)(Traumatic Injury|Reckless Driving|Fireworks|Open Door\/Premises Check|Shots Heard|Mutual Aid|Loud Party|Contact a Subject|Public Assist|Check Area|Follow Up|Convulsion\/Seizure|Medical Call Pd Requested|Alarm|Hemorrhage\/Lacerations|Barking Dog|Harrassment \/ Threats Report|Unconscious\/Fainting|Sick Person|MVA With Injuries|MVA Non Injury|Debris in Roadway|Unknown Problem\/Man Down|Officer Needed Nature Unk|Parking Problem|Motorist Assist|Breathing Problems|Civil Standby|Heart Problems\/AICD|Vandalism|Animal Livestock|Diabetic Problems|Animal Bite|Found Item|Animal Dead|Falls|Cardiac Respritory Arrest|Runaway or Lost Child|Foot Patrol|Warrant Service|Traffic Stop|911 Call Nature Unknown|Welfare Check|Suspicious|Disturbance\/Domestic|Assist Officer|Information|Miscellaneous|Burglary Alarm|Robbery Alarm|Fire|911 Hang Up|Vehicle Lockout|Animal Call|Noise Disturbance|Citizen Assist|Transport|Domestic\/Familial|Narcotics|Hazardous Condition|Missing Person|Business Check|Lost Property|Threats|Property|Public Intoxication|Trespassing|Drunk Driver|Assault|Suicide|Assist Citizen|Hit & Run|Stolen Vehicle|Fight|Assault w/ Deadly Weapon|Indecent Exposure|Forgery\/Counterfeit|Sex Offense|Child Abuse\/Neglect|Embezzlement|Fraud|Forgery|Identity Theft|Auto Theft|Civil Matter|Criminal Mischief|Violation Of Court Order|Weapons Offense|Probation\/Parole|Arson|Kidnapping\/Abduction|Homicide|Sexual Assault|Burglary|Breaking & Entering|Larceny|Robbery|Transfer\/Interfacility|EMSSTAT|OK0140200|14005)"
+            regex_pattern = r"(\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2})\s(\d{4}-\d{8})\s(.*?)(Chest Pain|Assault EMS Needed|Stroke|Supplement Report|Drug Violation|COP Relationships|Item Assignment|Animal Injured|Hit and Run|Animal Trapped|Traumatic Injury|Reckless Driving|Fireworks|Open Door\/Premises Check|Shots Heard|Mutual Aid|Loud Party|Contact a Subject|Public Assist|Check Area|Follow Up|Convulsion\/Seizure|Medical Call Pd Requested|Alarm|Hemorrhage\/Lacerations|Barking Dog|Harrassment \/ Threats Report|Unconscious\/Fainting|Sick Person|MVA With Injuries|MVA Non Injury|Debris in Roadway|Unknown Problem\/Man Down|Officer Needed Nature Unk|Parking Problem|Motorist Assist|Breathing Problems|Civil Standby|Heart Problems\/AICD|Vandalism|Animal Livestock|Diabetic Problems|Animal Bite|Found Item|Animal Dead|Falls|Cardiac Respritory Arrest|Runaway or Lost Child|Foot Patrol|Warrant Service|Traffic Stop|911 Call Nature Unknown|Welfare Check|Suspicious|Disturbance\/Domestic|Assist Officer|Information|Miscellaneous|Burglary Alarm|Robbery Alarm|Fire|911 Hang Up|Vehicle Lockout|Animal Call|Noise Disturbance|Citizen Assist|Transport|Domestic\/Familial|Narcotics|Hazardous Condition|Missing Person|Business Check|Lost Property|Threats|Property|Public Intoxication|Trespassing|Drunk Driver|Assault|Suicide|Assist Citizen|Hit & Run|Stolen Vehicle|Fight|Assault w/ Deadly Weapon|Indecent Exposure|Forgery\/Counterfeit|Sex Offense|Child Abuse\/Neglect|Embezzlement|Fraud|Forgery|Identity Theft|Auto Theft|Civil Matter|Criminal Mischief|Violation Of Court Order|Weapons Offense|Probation\/Parole|Arson|Kidnapping\/Abduction|Homicide|Sexual Assault|Burglary|Breaking & Entering|Larceny|Robbery|Transfer\/Interfacility|EMSSTAT|OK0140200|14005)"
             components = re.split(
                 regex_pattern, p[i]
             )  # Split each p[i] into the specified fields
@@ -107,15 +107,7 @@ def createdb():
         incident_ori TEXT
     );"""  # had to add empty field to accomodate the additional '' field before date_time
 
-<<<<<<< HEAD
-    # Execute SQL  command using try/except clause
-<<<<<<< HEAD
-        # try:
-=======
-    # try:
->>>>>>> 940ee53 (Combined fetchincidents and extractincidents)
-=======
->>>>>>> 92c3452 (additional files and working main.py)
+    # Execute SQL command
     cursor.execute(sql)
     conn.commit()  # Commit changes to database
 
