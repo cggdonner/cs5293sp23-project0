@@ -54,6 +54,7 @@ def fetchincidents(url):
         for i in range(
             len(p)
         ):  # Then include a nested for loop for each incident line on each page
+
             # Condition to ignore unwanted headers
             if (
                 "Daily Incident Summary (Public)" in p[i]
@@ -66,17 +67,28 @@ def fetchincidents(url):
             # (\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2}) to recognize date and time using 1 or 2 digits for month and day, then 4 digits for year, then 1 or 2 digits for hour and 2 digits for minute
             # \s(\d{4}-\d{8}) to recognize incident number using 4 digits followed by a hyphen, then followed by 8 digits
             # Then split based on listed incident natures and then by incident origin
-            regex_pattern = r"(\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2})\s(\d{4}-\d{8})\s(.*?)(Chest Pain|Assault EMS Needed|Stroke|Supplement Report|Drug Violation|COP Relationships|Item Assignment|Animal Injured|Hit and Run|Animal Trapped|Traumatic Injury|Reckless Driving|Fireworks|Open Door\/Premises Check|Shots Heard|Mutual Aid|Loud Party|Contact a Subject|Public Assist|Check Area|Follow Up|Convulsion\/Seizure|Medical Call Pd Requested|Alarm|Hemorrhage\/Lacerations|Barking Dog|Harrassment \/ Threats Report|Unconscious\/Fainting|Sick Person|MVA With Injuries|MVA Non Injury|Debris in Roadway|Unknown Problem\/Man Down|Officer Needed Nature Unk|Parking Problem|Motorist Assist|Breathing Problems|Civil Standby|Heart Problems\/AICD|Vandalism|Animal Livestock|Diabetic Problems|Animal Bite|Found Item|Animal Dead|Falls|Cardiac Respritory Arrest|Runaway or Lost Child|Foot Patrol|Warrant Service|Traffic Stop|911 Call Nature Unknown|Welfare Check|Suspicious|Disturbance\/Domestic|Assist Officer|Information|Miscellaneous|Burglary Alarm|Robbery Alarm|Fire|911 Hang Up|Vehicle Lockout|Animal Call|Noise Disturbance|Citizen Assist|Transport|Domestic\/Familial|Narcotics|Hazardous Condition|Missing Person|Business Check|Lost Property|Threats|Property|Public Intoxication|Trespassing|Drunk Driver|Assault|Suicide|Assist Citizen|Hit & Run|Stolen Vehicle|Fight|Assault w/ Deadly Weapon|Indecent Exposure|Forgery\/Counterfeit|Sex Offense|Child Abuse\/Neglect|Embezzlement|Fraud|Forgery|Identity Theft|Auto Theft|Civil Matter|Criminal Mischief|Violation Of Court Order|Weapons Offense|Probation\/Parole|Arson|Kidnapping\/Abduction|Homicide|Sexual Assault|Burglary|Breaking & Entering|Larceny|Robbery|Transfer\/Interfacility|EMSSTAT|OK0140200|14005)"
+            regex_pattern = r"(\d{1,2}\/\d{1,2}\/\d{4}\s\d{1,2}:\d{2})\s(\d{4}-\d{8})\s(.*?)(Chest Pain|Assault EMS Needed|Stroke|Supplement Report|Drug Violation|COP Relationships|Item Assignment|Animal Injured|Hit and Run|Animal Trapped|Traumatic Injury|Reckless Driving|Fireworks|Open Door\/Premises Check|Shots Heard|Mutual Aid|Loud Party|Contact a Subject|Public Assist|Check Area|Follow Up|Convulsion\/Seizure|Medical Call Pd Requested|Alarm|Hemorrhage\/Lacerations|Barking Dog|Harrassment \/ Threats Report|Unconscious\/Fainting|Sick Person|MVA With Injuries|MVA Non Injury|Debris in Roadway|Unknown Problem\/Man Down|Officer Needed Nature Unk|Parking Problem|Motorist Assist|Breathing Problems|Civil Standby|Heart Problems\/AICD|Vandalism|Animal Livestock|Diabetic Problems|Animal Bite|Found Item|Animal Dead|Falls|Cardiac Respritory Arrest|Runaway or Lost Child|Foot Patrol|Warrant Service|Traffic Stop|911 Call Nature Unknown|Welfare Check|Suspicious|Disturbance\/Domestic|Assist Officer|Information|Miscellaneous|Burglary Alarm|Robbery Alarm|Fire|911 Hang Up|Vehicle Lockout|Animal Call|Noise Disturbance|Citizen Assist|Transport|Domestic\/Familial|Narcotics|Hazardous Condition|Missing Person|Business Check|Lost Property|Threats|Property|Public Intoxication|Trespassing|Drunk Driver|Assault|Suicide|Assist Citizen|Hit & Run|Stolen Vehicle|Fight|Assault w/ Deadly Weapon|Indecent Exposure|Forgery\/Counterfeit|Sex Offense|Child Abuse\/Neglect|Embezzlement|Fraud|Forgery|Identity Theft|Auto Theft|Civil Matter|Criminal Mischief|Violation Of Court Order|Weapons Offense|Probation\/Parole|Arson|Kidnapping\/Abduction|Homicide|Sexual Assault|Burglary|Breaking & Entering|Larceny|Robbery|Transfer\/Interfacility|EMSSTAT|OK0140200|14005|14009)"
             components = re.split(
                 regex_pattern, p[i]
             )  # Split each p[i] into the specified fields
-            # print(components) Print statement to verfify fields
+            #print(components) # Print statement to verfify fields
+            
+            # Note: this block of code attempts to fix improperly formatted lines in incidents that are split due to multiple lines in address field
+            # Add an if condition to format lines that are improperly formatted due to multiple lines in address field
+            #prev_line = "" # Initialize tracking previous line
+            
+            #for components in p:
+            #    if(components.startswith(('RD', 'HWY', 'BLVD'))):
+            #        incident = components + prev_line
+            #        incidents.append(re.split(regex_pattern, incident.strip()))
+            #    else: prev_line = components
+            
             incidents.append(
                 components
-            )  # Add each p[i] incident to the incidents list object
+            )  # Add each p[i] incident to the incidents list object 
 
     return incidents
-    # print(incidents) Print statement to verify population of incidents
+    #print(incidents) #Print statement to verify population of incidents
     fp.close()  # Close the temporary file
 
 

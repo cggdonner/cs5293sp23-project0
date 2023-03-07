@@ -8,8 +8,10 @@ from project0 import incidentcounter
 
 # Test fetchincidents() function
 def test_fetchincidents(url = 'https://www.normanok.gov/sites/default/files/documents/2023-01/2023-01-01_daily_incident_summary.pdf'):
-    incidents = incidentcounter.fetchincidents(url)
-    assert len(incidents) > 0
+    incidents = incidentcounter.fetchincidents(url) # Call the fetchincidents() function from incidentcounter.py
+    assert len(incidents) > 0 # Assert that at least one incident is in the incident data that is extracted
+
+    # Assert that the first incident fields read as expected
     assert incidents[0][1] == "1/1/2023 0:06"
     assert incidents[0][2] == "2023-00000001"
     assert incidents[0][3] == "2000 ANN BRANDEN BLVD "
