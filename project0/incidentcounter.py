@@ -23,7 +23,7 @@ def fetchincidents(url):
         ).read()
     else:
         print(
-            f"URL not valid because does not contain incidents"
+            f"URL not valid because does it not contain incidents"
         )  # Otherwise reject any url that does not contain incidents
 
     # Create temporary file to store incident data in
@@ -40,7 +40,7 @@ def fetchincidents(url):
 
     # Get number of pages in pdf
     pagecount = len(pdfReader.pages)
-    print("Number of pages: ", pagecount)  # Print statement to verify
+    #print("Number of pages: ", pagecount)  # Print statement to verify number of pages
 
     # Store incident data in a list object
     incidents = []
@@ -74,6 +74,7 @@ def fetchincidents(url):
             #print(components) # Print statement to verfify fields
             
             # Note: this block of code attempts to fix improperly formatted lines in incidents that are split due to multiple lines in address field
+            # However, it does not work, I also tried regex formatting and it did not work as well.
             # Add an if condition to format lines that are improperly formatted due to multiple lines in address field
             #prev_line = "" # Initialize tracking previous line
             
@@ -150,9 +151,11 @@ def populatedb(incidents):
 
     # Print rows of incidents table using python function fetchall()
     cursor.execute("""SELECT * FROM incidents""")
-    rows = cursor.fetchall()
-    for row in rows:
-        print(row)
+
+    # This to verify that rows have been inserted into the table
+    #rows = cursor.fetchall()
+    #for row in rows:
+    #    print(row)
 
     # Close connection
     conn.close()
