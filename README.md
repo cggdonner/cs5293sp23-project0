@@ -14,9 +14,7 @@ This project is designed to read in information from an incident report from the
 ### How to install
 You can install my Project 0 using the command:
 git clone https://github.com/cggdonner/cs5293sp23-project0.git
-You will have to sign in using the following credentials:
-username: cggdonner
-password: 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
+You will have to sign into the repo as a collaborator using your credentials.
 After signing in, use the command cd cs5293sp23-project0/ to access the repo.
 To view all directories and files in the repo, use the command tree .
 
